@@ -49,21 +49,24 @@ impl Sala {
             println!("2) Agregar obra vacía.");
             println!("3) Consultar obras.");
             println!("4) Editar obra.");
-            println!("5) Salir");
+            println!("e) Salir");
             print!("Selecciona una opción: ");
             io::stdout().flush().unwrap();
             let mut opc = String::new();
             io::stdin().read_line(&mut opc).unwrap();
             let opc = match opc.trim().parse::<i32>() {
-                Ok(num) => num,
-                Err(_) => -1
+                Ok(num) => Ok(num),
+                Err(_) => match opc.trim().parse::<char>() {
+                    Ok(ch) => Err(ch),
+                    Err(_) => Ok(0)
+                }
             };
             match opc {
-                1 => self.obras.push(Obra::init()),
-                2 => self.obras.push(Obra::new()),
-                3 => self.consult_obras(),
-                4 => self.edit_obra(),
-                5 => break,
+                Ok(1) => self.obras.push(Obra::init()),
+                Ok(2) => self.obras.push(Obra::new()),
+                Ok(3) => self.consult_obras(),
+                Ok(4) => self.edit_obra(),
+                Err('e') => break,
                 _ => println!("\nOpción no válida.")
             }
         }
