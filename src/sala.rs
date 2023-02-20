@@ -7,11 +7,37 @@ pub struct Sala {
     nombre: String
 }
 impl Sala {
-    pub fn new(nom: &str) -> Sala {
+    pub fn new() -> Sala {
         Sala {
             obras: Vec::new(),
-            nombre: nom.to_string(),
+            nombre: String::new(),
         }
+    }
+    pub fn init() -> Sala {
+        println!("\n\t\tAgregar Sala.");
+        print!("Nombre: ");
+        io::stdout().flush().unwrap();
+        let mut titulito = String::new();
+        io::stdin().read_line(&mut titulito).unwrap();
+        titulito = titulito.trim().to_string();
+        let mut obritas: Vec<Obra> = Vec::new();
+        loop {
+            print!("Desea añadir una obra (y/N): ");
+            io::stdout().flush().unwrap();
+            let mut response = String::new();
+            io::stdin().read_line(&mut response).unwrap();
+            match response.trim().to_ascii_lowercase().parse::<char>() {
+                Ok('y') => obritas.push(Obra::init()),
+                _ => break
+            };
+        }
+        Sala {
+            nombre: titulito,
+            obras: obritas
+        }
+    }
+    pub fn get_name(&self) -> String {
+        self.nombre.clone()
     }
     fn consult_obra(obra: &Obra) {
         println!("Titulo: {}", obra.get_titulo());
@@ -22,7 +48,7 @@ impl Sala {
     }
     fn consult_obras(&self) {
         for (index, obra) in self.obras.iter().enumerate() {
-            println!("\n\tObra {}.", index + 1);
+            println!("\n\t- Obra {}.", index + 1);
             Sala::consult_obra(obra);
         }
     }
@@ -35,12 +61,15 @@ impl Sala {
             Ok(num) => num,
             Err(_) => 0
         };
-        if num > -1 && num as usize <= self.obras.len() {
+        if num > 0 && num as usize <= self.obras.len() {
             self.obras[(num - 1) as usize].obra_menu();
         } else {
             println!("\nOpción inválida.");
         }
-
+    }
+    pub fn show(&self) {
+        println!("Nombre: {}", self.nombre);
+        self.consult_obras();
     }
     pub fn menu(&mut self) {
         loop {

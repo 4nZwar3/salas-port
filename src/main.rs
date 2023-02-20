@@ -1,7 +1,8 @@
 mod obra;
 mod sala;
-use sala::*;
+mod museo;
+use museo::*;
 fn main() {
-    let mut sala = Sala::new("Tularmagedon");
-    sala.menu();
+    let mut museo = Museo::new("museo");
+    museo.menu();
 }
